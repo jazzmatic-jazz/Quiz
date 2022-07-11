@@ -9,19 +9,25 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = "Categories"
+
     def __str__(self) :
         return self.name
+    
 
 class Quizzes(models.Model):
-    class Meta:
-        verbose_name = 'Quiz'
-        verbose_name_plural = "Quizzes"
-        ordering = ['id']
     
     title = models.CharField(max_length=255, default = "New Quiz", verbose_name="Quiz Title")
     # If quiz gets deleted the category wont be getting deleted
     category = models.ForeignKey(Category, default=1, on_delete=models.DO_NOTHING)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Quiz'
+        verbose_name_plural = "Quizzes"
+        ordering = ['-date_created']
 
     def __str__(self) :
         return self.title
@@ -94,3 +100,6 @@ class Answer(Updated):
     question = models.ForeignKey(Question, related_name='answer', on_delete=models.DO_NOTHING)
     answer_text  = models.CharField(max_length=255, verbose_name= "Answer Text")
     is_right = models.BooleanField(default=False)
+
+    def __str__(self) :
+        return self.answer_text
